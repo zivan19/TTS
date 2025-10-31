@@ -38,3 +38,23 @@ Key behaviours:
 
 For single chunks you can call `tts_edge.synth.synth_chunk` directly, which uses
 identical file naming, voice configuration, and retry semantics.
+
+## Chunking text
+
+Long scripts are easiest to manage when split into roughly 1–3k character
+chunks. Use `tts_edge.chunking.chunk_text` to generate these batches while
+respecting sentence and paragraph boundaries:
+
+- The helper normalises whitespace (removing control characters and collapsing
+  multiple blank lines) before splitting paragraphs and sentences.
+- Sentences are detected via `nltk`'s Punkt models when available; otherwise a
+  punctuation-aware regex is used, with special handling to avoid splits inside
+  decimals, abbreviations, and URLs.
+- Paragraphs remain intact wherever possible. A new paragraph is only moved to a
+  fresh chunk when the previous chunk would exceed the configured limit.
+- `max_len` defaults to 2500 characters with a ±10% tolerance so that most
+  chunks fall within the 1–3k range. Sentences longer than the tolerance are
+  emitted on their own rather than being forcibly broken.
+
+Pair `chunk_text` with `tts_edge.chunking.load_text` to read UTF-8 inputs from
+disk before passing the resulting list to `synth_all`.

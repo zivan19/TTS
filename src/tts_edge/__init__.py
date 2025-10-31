@@ -1,5 +1,6 @@
 """Utilities for working with Edge TTS."""
 
+from .chunking import chunk_text, load_text
 from .synth import (
     DEFAULT_PITCH,
     DEFAULT_RATE,
@@ -16,4 +17,6 @@ __all__ = [
     "DEFAULT_VOLUME",
     "synth_chunk",
     "synth_all",
+    "chunk_text",
+    "load_text",
 ]
