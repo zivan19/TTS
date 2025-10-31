@@ -1,0 +1,36 @@
+[build-system]
+requires = ["hatchling>=1.17.0"]
+build-backend = "hatchling.build"
+
+[project]
+name = "tts-edge"
+version = "0.1.0"
+description = "Utilities for processing large text-to-speech jobs with edge-tts"
+authors = [
+    { name = "<Your Name>", email = "example@example.com" }
+]
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.11"
+dependencies = [
+    "edge-tts",
+    "pydub",
+    "ffmpeg-python",
+    "rich",
+    "typer",
+    "srt",
+    "rapidfuzz",
+    "nltk",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+]
+
+[project.scripts]
+"tts-edge" = "tts_edge.cli:run"
+
+[tool.pytest.ini_options]
+addopts = "-ra"
+testpaths = ["tests"]
