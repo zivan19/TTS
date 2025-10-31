@@ -164,3 +164,52 @@ def test_synth_all_retries_with_backoff(monkeypatch, tmp_path, stub_edge_tts):
     assert audio_path.read_bytes() == b"final"
     assert subtitle_path.read_text(encoding="utf-8") == "srt:1"
     assert sleep_calls == [0.5, 1.0]
+
+
+def test_synth_all_cleans_partial_outputs(monkeypatch, tmp_path):
+    attempts: list[int] = []
+    existence_checks: list[bool] = []
+
+    class CleanupTransient(Exception):
+        def __init__(self) -> None:
+            super().__init__("HTTP 429 during stream")
+            self.status_code = 429
+
+    async def stub_synth_chunk(**kwargs):
+        attempts.append(kwargs["index"])
+        audio_path = kwargs["out_dir"] / "parts" / f"part_{kwargs['index']:04d}.mp3"
+        audio_path.parent.mkdir(parents=True, exist_ok=True)
+        existence_checks.append(audio_path.exists())
+        audio_path.write_bytes(b"partial" if len(attempts) == 1 else b"final")
+        if len(attempts) == 1:
+            raise CleanupTransient()
+        return audio_path, None
+
+    monkeypatch.setattr(synth, "synth_chunk", stub_synth_chunk)
+
+    sleep_calls: list[float] = []
+
+    async def fake_sleep(duration: float) -> None:
+        sleep_calls.append(duration)
+
+    monkeypatch.setattr(synth.asyncio, "sleep", fake_sleep)
+
+    results = asyncio.run(
+        synth.synth_all(
+            ["cleanup"],
+            out_dir=tmp_path,
+            voice="voice",
+            rate="+0%",
+            pitch="+0Hz",
+            volume="+0%",
+            concurrency=1,
+            resume=False,
+            srt=False,
+        )
+    )
+
+    audio_path, subtitle_path = results[0]
+    assert subtitle_path is None
+    assert audio_path.read_bytes() == b"final"
+    assert sleep_calls == [0.5]
+    assert existence_checks == [False, False]

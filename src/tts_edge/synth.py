@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import asyncio
 from collections.abc import Iterable
+from contextlib import suppress
 from pathlib import Path
 from typing import Any
 
@@ -163,6 +164,11 @@ async def synth_all(
                         srt=srt,
                     )
             except Exception as exc:  # noqa: BLE001 - we need to inspect the exception
+                with suppress(FileNotFoundError):
+                    audio_path.unlink()
+                if subtitle_path is not None:
+                    with suppress(FileNotFoundError):
+                        subtitle_path.unlink()
                 if attempt < len(_BACKOFF_DELAYS) and _is_transient_error(exc):
                     delay = _BACKOFF_DELAYS[attempt]
                     attempt += 1
