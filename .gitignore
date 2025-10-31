@@ -1,0 +1,9 @@
+.venv/
+.env
+__pycache__/
+.pytest_cache/
+.DS_Store
+*.mp3
+*.wav
+/out/
+/tmp/
