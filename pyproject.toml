@@ -1,0 +1,21 @@
+[project]
+name = "tts-edge"
+version = "0.1.0"
+description = "Command line utilities for Microsoft Edge TTS"
+readme = "README.md"
+requires-python = ">=3.9"
+authors = [{name = "TTS Maintainers"}]
+dependencies = [
+    "edge-tts>=7.2.3",
+]
+
+[project.optional-dependencies]
+test = [
+    "pytest>=7.4",
+]
+
+[project.scripts]
+"tts-edge" = "tts_edge.cli:entry_point"
+
+[tool.pytest.ini_options]
+addopts = "-q"
