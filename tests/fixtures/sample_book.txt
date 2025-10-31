@@ -1,0 +1,33 @@
+My Book Title
+Author Name
+--- Page Footer ---
+
+My Book Title
+Author Name
+1
+Chapter 1
+The first paragraph of the first chapter stretches across multiple lines
+so we can exercise the chunker.
+
+> A block quote that should stay together.
+> Second line of the same quote.
+
+```
+def hello():
+    return "world"
+```
+
+The closing remarks for the first chapter appear here.
+--- Page Footer ---
+
+My Book Title
+Author Name
+2
+Chapter 2
+Another chapter begins with more narrative text to confirm
+that chapter boundaries start new chunks.
+
+Speaker A: Welcome back to the conversation.
+Speaker B: Thanks for having me.
+
+--- Page Footer ---
