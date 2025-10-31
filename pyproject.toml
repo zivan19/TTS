@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tts-preprocess"
+version = "0.1.0"
+description = "Text preprocessing utilities for TTS books and transcripts"
+authors = [{name = "OpenAI", email = "opensource@openai.com"}]
+requires-python = ">=3.10"
+dependencies = [
+    "rapidfuzz>=3.0.0",
+]
+
+[project.optional-dependencies]
+test = [
+    "pytest>=7.0",
+]
+
+[tool.pytest.ini_options]
+addopts = "-q"
+testpaths = [
+    "tests",
+]
